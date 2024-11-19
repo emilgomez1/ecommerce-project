@@ -10,6 +10,10 @@ const router = express.Router();
 //Register Route
 router.post('/register', async (req, res) => {
     const {username, email, password} = req.body
+    //Ensure the passworld is at least 8 characters long
+    if (password.length < 8) {
+        return res.status(400).json({error: "Password must be at least 8 characters long"});
+    }
    
     try {
         const user = new User({username, email, password}); //Create new user with the json sent back

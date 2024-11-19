@@ -2,9 +2,10 @@ const express = require('express');
 const Order = require('../models/Order');
 const Cart = require('../models/Cart.js');
 const router = express.Router();
+const authenticateUser = require('../middleware/authenticateUser.js');
 
 //Checkout and Create Order
-router.post('/checkout', async (req, res) => {
+router.post('/checkout', authenticateUser, async (req, res) => {
     const {userId} = req.body;
     try {
         //Retrieve the users cart
@@ -45,7 +46,7 @@ router.post('/checkout', async (req, res) => {
 });
 
 // Get all orders by user ID
-router.get('/:userId', async (req, res) => {
+router.get('/:userId',authenticateUser , async (req, res) => {
     try {
         const orders = await Order.find({userId: req.params.userId});
         res.json(orders);

@@ -2,6 +2,7 @@ const express = require('express');
 const Cart = require('../models/Cart.js');
 const { createSearchIndex } = require('../models/User');
 const Product = require('../models/Product');
+const authenticateUser = require('../middleware/authenticateUser.js');
 const router = express.Router();  // Create a new router everytime for every collection
 
 router.post('/add', async (req, res) =>{
@@ -35,7 +36,7 @@ router.post('/add', async (req, res) =>{
 });
 
 //Get cart by user
-router.get('/:userId', async (req, res) => {
+router.get('/:userId', authenticateUser, async (req, res) => {
     try {
         let cart = await Cart.findOne({userId: req.params.userId}).populate('products.productId');
         if (!cart) { // If the cart doesnt exist, meaning a user didnt add any products yet create an empty cart
